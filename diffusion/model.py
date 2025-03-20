@@ -162,7 +162,7 @@ class DiffusionModel(nn.Module):
         sigma_tau_i = (1.0 - alpha_cumprod_tau_isub1) * beta / (1.0 - alpha_cumprod_tau_i)
 
         # Step 4: Compute the coefficient of \epsilon_{\tau_{i}}
-        epsilon_coef = torch.sqrt(1 - alpha_cumprod_tau_isub1 - sigma_tau_i) #sigma_tau_i , no **2
+        epsilon_coef = torch.sqrt(1 - alpha_cumprod_tau_isub1 - sigma_tau_i)
 
         # Step 5: Sample from q(x_{\tau_{i - 1}} | x_{\tau_t}, x_0)
         # HINT: Use the reparameterization trick

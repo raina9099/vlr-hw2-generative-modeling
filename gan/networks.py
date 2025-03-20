@@ -29,7 +29,6 @@ class UpSampleConv2D(torch.jit.ScriptModule):
         # 3. Apply convolution and return output
         ##################################################################
         x = x.repeat_interleave(int(self.upscale_factor**2), dim = 1 )
-        # Use PixelShuffle to rearrange into higher resolution
         x = self.pix_shuff(x)
         x = self.conv(x)
         return x
@@ -60,14 +59,10 @@ class DownSampleConv2D(torch.jit.ScriptModule):
         # 3. Take the average across dimension 0, apply convolution,
         # and return the output
         ##################################################################
-        # Use PixelUnshuffle to reduce spatial dimensions
         x = self.pix_unshuff(x)
-        # Reshape to (downscale_ratio^2, batch, channel, height, width)
         b, c, h, w = x.shape
         x = x.view(int(self.downscale_ratio**2), b, -1, h, w)
-        # Take mean across first dimension
         x = torch.mean(x, dim=0)
-        # Apply convolution
         x = self.conv(x)
         return x
         ##################################################################
@@ -312,7 +307,7 @@ class Generator(torch.jit.ScriptModule):
         # TODO 1.1: Generate n_samples latents and forward through the
         # network.
         ##################################################################
-        z = torch.randn(n_samples, 128).cuda()  # Sample from standard normal
+        z = torch.randn(n_samples, 128).cuda()
         return self.forward_given_samples(z)
         ##################################################################
         #                          END OF YOUR CODE                      #
@@ -397,7 +392,7 @@ class Discriminator(torch.jit.ScriptModule):
         # dimensions after passing x through self.layers.
         ##################################################################
         x = self.layers(x)
-        x = x.sum([2, 3])  # Sum across spatial dimensions
+        x = x.sum([2, 3])
         x = self.dense(x)
         return x
         ##################################################################

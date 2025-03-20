@@ -54,7 +54,6 @@ def interpolate_latent_space(gen, path):
     # Generate images
     images = gen.forward_given_samples(z)
     
-    # Save the grid of images (normalize to [0,1] range for saving)
     vutils.save_image(images, path, normalize=True, nrow=10)
     ##################################################################
     #                          END OF YOUR CODE                      #
