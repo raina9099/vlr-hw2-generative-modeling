@@ -175,17 +175,12 @@ def train_model(
                         # TODO 1.2: Generate samples using the generator.
                         # Make sure they lie in the range [0, 1]!
                         ##################################################################
-                        # n_samples = 100
-                        # generated_samples = gen(n_samples)
-                        # generated_samples = (generated_samples + 1) / 2 # Scale from [-1, 1] to [0, 1]
-                        # TODO: Refactor
-                        num_samples = 100
-                        generated_samples = gen(num_samples).cuda()
-                        B,C,H,W = generated_samples.size()
-                        generated_samples = generated_samples.view(num_samples,-1)
-                        generated_samples -= generated_samples.min(1,keepdim = True)[0]
-                        generated_samples /= generated_samples.max(1,keepdim = True)[0]
-                        generated_samples = generated_samples.view(num_samples,C,H,W)
+                        n_samples = 100
+                        generated_samples = gen(n_samples).cuda()
+                        generated_samples = generated_samples.view(n_samples, -1)
+                        generated_samples = torch.clamp(generated_samples, -1.0, 1.0)
+                        generated_samples = (generated_samples + 1) / 2 # Scale from [-1, 1] to [0, 1]
+                        generated_samples = generated_samples.view(n_samples, -1, generated_samples.shape[2], generated_samples.shape[3])
                         ##################################################################
                         #                          END OF YOUR CODE                      #
                         ##################################################################
