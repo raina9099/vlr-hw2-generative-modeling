@@ -90,14 +90,11 @@ class DiffusionModel(nn.Module):
         # get_posterior_parameters() for usage examples.
         # 
         ##################################################################
-        pred_noise = None
-        x_0 = None
-        
         # TODO 3.1: Make sure to clamp x_0 between -1 and 1.0
         # Use the denoising model to predict the noise
         pred_noise = self.model(x_t, t)
         # Predict x_0 using the predicted noise
-        x_0 = extract(self.x_0_pred_coef_1, t, x_t.shape) * x_t - extract(self.x_0_pred_coef_2, t, x_t.shape) * pred_noise
+        x_0 = extract(self.x_0_pred_coef_1, t, x_t.shape) * x_t + extract(self.x_0_pred_coef_2, t, x_t.shape) * pred_noise
         # Clamp x_0 between -1 and 1
         x_0 = torch.clamp(x_0, -1.0, 1.0)
         
